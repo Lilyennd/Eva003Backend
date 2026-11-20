@@ -104,7 +104,7 @@ public class AuthController {
         }
     }
 
-    /** Valida el ID token con Google y comprueba que fue emitido para NUESTRA app. */
+
     private JsonNode verificarGoogle(String credential) {
         if (googleClientId.isBlank() || credential == null || credential.isBlank()) return null;
         try {

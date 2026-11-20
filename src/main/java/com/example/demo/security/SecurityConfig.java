@@ -32,23 +32,18 @@ public class SecurityConfig {
                 .requestMatchers("/error", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                 // Publico
                 .requestMatchers(HttpMethod.POST, "/login", "/login/**", "/usuarios", "/contacto").permitAll()
-                // Imágenes subidas: cualquiera puede verlas
                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/productos/criticos").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/productos", "/productos/*", "/productos/ofertas",
                         "/categorias", "/categorias/*", "/blogs", "/blogs/*", "/regiones", "/comunas").permitAll()
-                // Subir imágenes y crear blogs: admin y vendedor
                 .requestMatchers(HttpMethod.POST, "/imagenes/*").hasAnyRole("ADMIN", "VENDEDOR")
                 .requestMatchers(HttpMethod.POST, "/blogs").hasAnyRole("ADMIN", "VENDEDOR")
                 .requestMatchers(HttpMethod.PUT, "/blogs/*").hasAnyRole("ADMIN", "VENDEDOR")
-                // Ordenes: staff (admin/vendedor) ve todas; cliente solo las suyas (validado en el controller)
                 .requestMatchers(HttpMethod.GET, "/ordenes", "/ordenes/*").authenticated()
                 .requestMatchers(HttpMethod.POST, "/ordenes").hasAnyRole("CLIENTE", "ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/ordenes/*").hasAnyRole("CLIENTE", "ADMIN")
-                // Perfil propio (validado con @PreAuthorize)
                 .requestMatchers(HttpMethod.GET, "/usuarios/*").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/usuarios/*").authenticated()
-                // Todo lo demas: solo ADMIN
                 .anyRequest().hasRole("ADMIN"))
             .exceptionHandling(e -> e
                 .authenticationEntryPoint((req, res, ex) -> {
